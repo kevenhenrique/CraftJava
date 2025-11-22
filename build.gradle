@@ -45,6 +45,11 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    testImplementation 'org.mockito:mockito-core:5.10.0'
+}
+test {
+    useJUnitPlatform()
 }
 
 tasks.withType(JavaCompile) {
