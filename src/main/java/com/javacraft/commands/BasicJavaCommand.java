@@ -11,7 +11,7 @@ public class BasicJavaCommand {
                 Commands.literal("javabasic")
                         .executes(context -> {
                             context.getSource().sendSuccess(
-                                    () -> net.minecraft.network.chat.Component.literal("Comando java báscio funcionando"),
+                                    () -> net.minecraft.network.chat.Component.literal("Comando java básico funcionando"),
                                     false
                             );
                             return 1;

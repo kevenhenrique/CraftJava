@@ -1,5 +1,4 @@
 package com.javacraft.commands;
-import com.javacraft.commands.BasicJavaCommand;
 import com.javacraft.JavaCraft;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
@@ -17,6 +16,15 @@ public class CommandRegistry {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
 
         BasicJavaCommand.register(dispatcher);
+
+        dispatcher.register(
+                Commands.literal("ajuda_java")
+                        .executes(context -> {
+                            CommandMessages.sendHelpText(context.getSource());
+                            return 1;
+                        })
+
+        );
         dispatcher.register(
                 Commands.literal("java_if")
                         .executes(context -> {
@@ -35,7 +43,14 @@ public class CommandRegistry {
         dispatcher.register(
                 Commands.literal("java_variavel")
                         .executes(context -> {
-                            CommandMessages.sendVariableExplanation(context.getSource());
+                            CommandMessages.sendVariableExplanation();
+                            return 1;
+                        })
+        );
+        dispatcher.register(
+                Commands.literal("variavel")
+                        .executes(context -> {
+                            CommandMessages.summonVariable(context.getSource());
                             return 1;
                         })
         );
