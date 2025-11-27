@@ -31,7 +31,7 @@ public class JavaCraft{
         @SubscribeEvent
         public static void onPlayerLogin(ClientPlayerNetworkEvent.LoggingIn event){
             Minecraft.getInstance().player.sendSystemMessage(
-                    Component.literal(">>>>>>>>Mod carregado com sucesso!!!!!!!")
+                    Component.literal(">>>>>>>>Mod carregado com sucesso!!!!!!!\n\n>>>>>>>>Use /ajuda_java para obter mais informações.")
             );
         }
     }
