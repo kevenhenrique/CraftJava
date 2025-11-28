@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +16,7 @@ public class CommandMessages {
     static String varName;
     static String varValue;
     static String varType;
+    static boolean working = false;
     public static void sendIfExplanation(CommandSourceStack source) {
         source.sendSuccess(()-> Component.literal(
                 """
@@ -32,11 +34,7 @@ public class CommandMessages {
     public static void sendHelpText(CommandSourceStack source) {
         MutableComponent message = Component.empty();
         // Função para ocupar uma linha inteira
-        StringBuilder obfText = new StringBuilder();
-        for (int i = 0; i < 50; i++) {
-            obfText.append("A");
-        }
-        MutableComponent obfuscatedLine = Component.literal(obfText.toString())
+        MutableComponent obfuscatedLine = Component.literal("A".repeat(50))
                 .withStyle(ChatFormatting.OBFUSCATED);
         message.append(obfuscatedLine)
                 .append(Component.literal("\n\n\n\n"));
@@ -67,7 +65,7 @@ public class CommandMessages {
     }
 
     public static void summonVariable(CommandSourceStack source){
-        if (varValue != null && !varValue.isBlank() && varName != null && !varName.isBlank()) {
+        if (working) {
             source.sendSuccess(() -> Component.literal("✅ Sua variável ("  + varType  + ") é: "   + varName + "\n" + "✅ Com valor: " + varValue), false);
         }
         else {
@@ -77,30 +75,34 @@ public class CommandMessages {
     }
 
 
+
     // Criador da tela
     public static class InfoScreen extends Screen {
         EditBox input1;
         EditBox input2;
         final String text;
+        final String type;
         List<String> options = List.of("int", "String", "bool");
-        //Se o index for 1 é int, se for 2 é String etc...
+        //Se o index for 0 é int, se for 1 é String etc...
         int selectedIndex = 0;
 
 
 
         public InfoScreen(String type) {
             // Será reutilizável,
-
-            super(Component.literal(Objects.equals(type, "variables") ? "Variáveis em Java" : "---"));
+            super(Component.literal(Objects.equals(type, "variables") ? "Variáveis em Java" : type));
+            this.type = type;
             this.text = "[Java Básico] - Variáveis\nExemplo:\nint idade = 20;\nString nome = \"Joãozim\";\n...";
         }
         // Inicia a renderização
         @Override
         protected void init() {
+
+            if (Objects.equals(type, "variables")){
                 int buttonWidth = 100;
                 int buttonHeight = 20;
 
-                // Botão para selecionar o tipo da variável [Incompleto]
+                // Botão para selecionar o tipo da variável
                 int x = (this.width - buttonWidth) / 2;
                 int y = (this.height / 2) - 40;
                 Button dropdownButton = Button.builder(Component.literal(options.get(selectedIndex)),
@@ -108,6 +110,7 @@ public class CommandMessages {
                                     selectedIndex++;
                                     if (selectedIndex >= options.size()) selectedIndex = 0;
                                     b.setMessage(Component.literal(options.get(selectedIndex)));
+                                    if (selectedIndex == 2) input2.setSuggestion("true/false");
                                 })
                         .bounds(x, y, buttonWidth, buttonHeight)
                         .build();
@@ -148,7 +151,32 @@ public class CommandMessages {
 
                     // Checa se os valores são nulos ou não
                     if (!varValue.isBlank() && !varName.isBlank()){
-                        Minecraft.getInstance().player.sendSystemMessage(Component.literal("Variável (" + varType + ") " + varName + " = " + varValue));
+                        assert Minecraft.getInstance().player != null;
+                        //Se for bool, só funcionará caso o valor do usuário seja False/True
+                        if (selectedIndex == 2){
+                            if(varValue.equals("TRUE".toLowerCase()) || varValue.equals("FALSE".toLowerCase())){
+                                working = true;
+                                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Variável (" + varType + ") " + varName + " = " + varValue));
+                            }else{
+                                working = false;
+                                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Para uma variável bool, por favor declare um valor False/True"));}
+                        }
+                        else if (selectedIndex == 0){
+                            try {
+                                //Se for int, tenta converter
+                                Integer.parseInt(varValue);
+                                working = true;
+                                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Variável (" + varType + ") " + varName + " = " + varValue));
+                            } catch (Exception ignored) {
+                                working = false;
+                                Minecraft.getInstance().player.sendSystemMessage(Component.literal("Para uma variável int, por favor declare um número (1, 2, 3...)"));
+                            }
+                        }
+                        else{
+                            working = true;
+                            Minecraft.getInstance().player.sendSystemMessage(Component.literal("Variável (" + varType + ") " + varName + " = " + varValue));
+                        }
+
                     }
 
 
@@ -156,9 +184,14 @@ public class CommandMessages {
                     this.onClose();
                 }).bounds(this.width / 2 - 40, this.height / 2 + 20, 80, 20).build());
             }
+            }
 
-            @Override
-            public void render(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+
+
+
+
+        @Override
+            public void render(net.minecraft.client.gui.@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
                 if (this.minecraft != null && this.minecraft.level != null) {
                     this.renderBackground(graphics);
                 }
@@ -170,11 +203,14 @@ public class CommandMessages {
                     startY += 10;
                 }
 
+                if(Objects.equals(type, "variables")){
                 graphics.drawCenteredString(this.font,
                         "=",
                         this.width / 2,
                         this.height / 2 + 4,
                         0xFFFFFF);
+            }
+
 
                 super.render(graphics, mouseX, mouseY, partialTicks);
 
