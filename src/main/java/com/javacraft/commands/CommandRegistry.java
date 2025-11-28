@@ -54,5 +54,6 @@ public class CommandRegistry {
                             return 1;
                         })
         );
+
     }
 }
