@@ -1,0 +1,63 @@
+Documentação do Projeto CraftJava
+
+Integrantes do Grupo
+- Gabriel Machado – RA 32427229  
+- Keven - RA 325219722
+- Rafael - 324210793
+- Miguel - RA 324133124
+
+Visão Geral
+CraftJava é um mod educativo para Minecraft desenvolvido em Java, com o objetivo de ensinar conceitos básicos de programação por meio de comandos interativos dentro do jogo.
+
+Estrutura do Projeto
+CraftJava é organizado como um mod para Minecraft, utilizando Minecraft Forge e desenvolvido inteiramente em Java.
+
+Funcionalidades Implementadas
+Sistema de Comandos Interativos
+
+Comandos Disponíveis:
+- `/ajuda_java` – Menu principal de ajuda  
+- `/java_if` – Explica estrutura condicional `IF/ELSE`  
+- `/java_loop` – Explica loops `FOR`  
+- `/java_variavel` – Abre interface gráfica para criação de variáveis  
+- `/variavel` – Exibe variável criada pelo usuário  
+- `/javabasic` e `/basicjava` – Comandos básicos de teste  
+
+Sistema de Explicações de Código
+Estruturas Explicadas:
+- Condicionais `IF/ELSE`  
+- Loops `FOR`  
+- Declaração de variáveis (`int`, `String`, `bool`)  
+
+Interface Gráfica para Variáveis
+- Tela interativa para criação de variáveis  
+- Seleção de tipo (`int`, `String`, `bool`)  
+- Inputs para nome e valor da variável  
+- Validação de dados  
+
+Tecnologias e Ferramentas
+- **Minecraft Forge** – Framework para criação de mods  
+- **Java 17** – Linguagem principal  
+- **Gradle** – Sistema de build  
+- **GitHub Actions** – CI/CD automatizado  
+- **Brigadier** – Sistema de comandos do Minecraft  
+- **JUnit 5** – Testes unitários  
+- **Mockito** – Criação de mocks para testes  
+
+Estrutura de Testes
+O projeto inclui testes unitários localizados em:
+
+```
+src/test/java/com/javacraft/test/MainModTest.java
+```
+
+1. Teste Simples com JUnit
+2. Teste com Mockito
+
+---
+
+**Repositório GitHub:** [https://github.com/MiguelQrz/CraftJava]  
+**Licença:** [GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999]  
+**Versão:** 1.0.0  
+**Última atualização:** [02/12/2025]
+```
